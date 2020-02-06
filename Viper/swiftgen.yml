@@ -4,3 +4,11 @@ xcassets:
   outputs:
     - templateName: swift4
       output: Viper/Generated/assets-images.swift
+ib:
+  inputs:
+    - Viper/AppScenes/
+  outputs:
+    - templateName: scenes-swift4
+      output: Viper/Generated/storyboard-scenes.swift
+    - templateName: segues-swift4
+      output: Viper/Generated/storyboard-segues.swift

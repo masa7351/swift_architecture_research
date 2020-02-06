@@ -22,7 +22,7 @@
 --octalgrouping none
 --operatorfunc spaced
 --patternlet hoist
---ranges no-space
+--nospaceoperators
 --self remove
 --selfrequired 
 --semicolons inline

@@ -68,6 +68,7 @@ targets:
       INFOPLIST_FILE: Viper/Info.plist
     dependencies:
       - carthage: Kingfisher
+      - carthage: Reusable
     configs:
       Debug:
         SWIFT_ACTIVE_COMPILATION_CONDITIONS: DEBUG
