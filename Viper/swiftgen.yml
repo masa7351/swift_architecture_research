@@ -1,0 +1,6 @@
+xcassets:
+  inputs:
+    - Viper/Resources/Images.xcassets
+  outputs:
+    - templateName: swift4
+      output: Viper/Generated/assets-images.swift
