@@ -31,13 +31,9 @@ enum AppScene: Scene {
     private func configureUserDetail(_ user: User) -> UIViewController {
         let userName = user.login
         let vc = StoryboardScene.UserDetail.initialScene.instantiate()
-        let model = UserDetailModel(userName: userName)
-        let presenter = UserDetailPresenter(
-            userName: userName,
-            view: vc,
-            model: model
-        )
-        vc.inject(presenter: presenter)
+        let presenter = UserDetailPresenter(userName: userName)
+        let interactor = UserDetailInteractor()
+        build(view: vc, presenter: presenter, interactor: interactor, scenePresenter: nil)
         return vc
     }
 }

@@ -52,8 +52,8 @@ private extension SearchUserPresenter {
 
 // MARK: - Response
 
-extension SearchUserPresenter {
-    private func listReceived(result: Result<[User]>) {
+private extension SearchUserPresenter {
+    func listReceived(result: Result<[User]>) {
         switch result {
         case let .success(users):
             if users.isEmpty {

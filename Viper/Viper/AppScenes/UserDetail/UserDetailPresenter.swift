@@ -1,51 +1,59 @@
 //
-// Created by Kenji Tanaka on 2018/09/26.
-// Copyright (c) 2018 Kenji Tanaka. All rights reserved.
+//  UserDetailPresenter.swift
+//  Viper
 //
-
+//  Created by Masanao Imai on 2020/02/07.
+//
 import Foundation
 
-protocol UserDetailPresenterInput {
-    var repositories: [Repository] { get }
-    func repository(forRow row: Int) -> Repository?
-    func viewDidLoad()
-}
+final class UserDetailPresenter: Presenter {
+    typealias Event = UserDetailViewEvent
+    typealias Command = UserDetailPresenterCommand
+    typealias Request = UserDetailInteractorRequest
+    typealias Response = UserDetailInteractorResponse
 
-protocol UserDetailPresenterOutput: AnyObject {
-    func updateRepositories(_ repositories: [Repository])
-}
+    var requestListener: AnyRequestListener<UserDetailInteractorRequest>?
+    var commandListener: AnyCommandListener<UserDetailPresenterCommand>?
+    var router: Router?
+    var scenePresenter: ScenePresenter?
 
-final class UserDetailPresenter: UserDetailPresenterInput {
     private var userName: String
-    private(set) var repositories: [Repository] = []
-
-    private weak var view: UserDetailPresenterOutput!
-    private var model: UserDetailModelInput
-
-    init(userName: String, view: UserDetailPresenterOutput, model: UserDetailModelInput) {
+    init(userName: String) {
         self.userName = userName
-        self.view = view
-        self.model = model
     }
 
-    func repository(forRow row: Int) -> Repository? {
-        guard row < repositories.count else { return nil }
-        return repositories[row]
+    func handle(event: UserDetailViewEvent) {
+        switch event {
+        case .viewDidLoad:
+            viewDidLoad()
+        }
     }
 
+    func handle(response: UserDetailInteractorResponse) {
+        switch response {
+        case let .listReceived(result):
+            listReceive(result: result)
+        }
+    }
+}
+
+// MARK: - ViewEvent
+
+private extension UserDetailPresenter {
     func viewDidLoad() {
-        model.fetchRepositories { [weak self] result in
-            switch result {
-            case let .success(repositories):
-                self?.repositories = repositories
+        requestListener?.handle(request: .fetchList(userName: userName))
+    }
+}
 
-                DispatchQueue.main.async {
-                    self?.view.updateRepositories(repositories)
-                }
-            case let .failure(error):
-                // TODO: Error Handling
-                ()
-            }
+// MARK: - Response
+
+private extension UserDetailPresenter {
+    func listReceive(result: Result<[Repository]>) {
+        switch result {
+        case let .success(repositories):
+            commandListener?.handle(command: .reload(list: repositories))
+        case let .failure(error):
+            commandListener?.handle(command: .showError(title: error.localizedDescription, message: nil))
         }
     }
 }
