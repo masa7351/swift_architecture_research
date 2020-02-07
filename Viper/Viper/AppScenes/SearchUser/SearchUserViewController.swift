@@ -1,14 +1,33 @@
 //
 //  SearchUserViewController.swift
-//  MVPSample
+//  Viper
 //
-//  Created by Kenji Tanaka on 2018/09/23.
-//  Copyright © 2018年 Kenji Tanaka. All rights reserved.
+//  Created by Masanao Imai on 2020/02/07.
 //
 
 import UIKit
 
-final class SearchUserViewController: UIViewController {
+final class SearchUserViewController: UIViewController, View {
+    // MARK: - View
+
+    var eventListener: AnyEventListener<SearchUserViewEvent>?
+
+    func handle(command: SearchUserPresenterCommand) {
+        switch command {
+        case let .reload(list):
+            reload(list: list)
+        case .showNoContent:
+            showNoContent()
+        case let .showError(title, message):
+            showAlert(title: title, message: message)
+        }
+    }
+
+    typealias Event = SearchUserViewEvent
+    typealias Command = SearchUserPresenterCommand
+
+    // MARK: - IBOutlet
+
     @IBOutlet private var searchBar: UISearchBar!
     @IBOutlet private var tableView: UITableView! {
         didSet {
@@ -18,67 +37,74 @@ final class SearchUserViewController: UIViewController {
         }
     }
 
-    private var presenter: SearchUserPresenterInput!
-    func inject(presenter: SearchUserPresenterInput) {
-        self.presenter = presenter
-    }
+    // MARK: - Private Properties
 
-    static func instantiate() -> SearchUserViewController {
-        let searchUserViewController = StoryboardScene.SearchUser.initialScene.instantiate()
-        let model = SearchUserModel()
-        let presenter = SearchUserPresenter(view: searchUserViewController, model: model)
-        searchUserViewController.inject(presenter: presenter)
-        return searchUserViewController
+    private var users: [User] = []
+
+    fileprivate func user(forRow row: Int) -> User? {
+        guard row < users.count else { return nil }
+        return users[row]
     }
 }
+
+// MARK: - View
+
+extension SearchUserViewController {
+    func reload(list: [User]) {
+        users = list
+        tableView.isHidden = false
+        tableView.reloadData()
+    }
+
+    func showNoContent() {
+        tableView.isHidden = true
+    }
+}
+
+// MARK: - ScenePresenter
+
+extension SearchUserViewController: ScenePresenter {
+    func present(viewController: UIViewController) {
+        navigationController?.pushViewController(viewController, animated: true)
+    }
+}
+
+// MARK: - UISearchBarDelegate
 
 extension SearchUserViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        presenter.didTapSearchButton(text: searchBar.text)
+        eventListener?.handle(event: .didTapSearchButton(text: searchBar.text ?? ""))
     }
 }
+
+// MARK: - UITableViewDelegate
 
 extension SearchUserViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView,
                    didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        presenter.didSelectRow(at: indexPath)
+        if let user = user(forRow: indexPath.row) {
+            eventListener?.handle(event: .didSelect(user: user))
+        }
     }
 }
+
+// MARK: - UITableViewDataSource
 
 extension SearchUserViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView,
                    numberOfRowsInSection section: Int) -> Int {
-        presenter.numberOfUsers
+        users.count
     }
 
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(for: indexPath) as UserCell
 
-        if let user = presenter.user(forRow: indexPath.row) {
+        if let user = user(forRow: indexPath.row) {
             cell.configure(user: user)
         }
 
         return cell
-    }
-}
-
-extension SearchUserViewController: SearchUserPresenterOutput {
-    func updateUsers(_ users: [User]) {
-        tableView.reloadData()
-    }
-
-    func transitionToUserDetail(userName: String) {
-        let userDetailVC = StoryboardScene.UserDetail.initialScene.instantiate()
-        let model = UserDetailModel(userName: userName)
-        let presenter = UserDetailPresenter(
-            userName: userName,
-            view: userDetailVC,
-            model: model
-        )
-        userDetailVC.inject(presenter: presenter)
-
-        navigationController?.pushViewController(userDetailVC, animated: true)
     }
 }

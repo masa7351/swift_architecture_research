@@ -17,9 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let window = UIWindow(frame: UIScreen.main.bounds)
             self.window = window
             window.makeKeyAndVisible()
-
-            let vc = SearchUserViewController.instantiate()
-            window.rootViewController = vc
+            window.rootViewController = AppScene.searchUser.viewController
         }
         return true
     }
