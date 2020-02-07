@@ -10,23 +10,17 @@ import UIKit
 
 final class SearchUserViewController: UIViewController {
     @IBOutlet private var searchBar: UISearchBar!
-    @IBOutlet private var tableView: UITableView!
+    @IBOutlet private var tableView: UITableView! {
+        didSet {
+            tableView.estimatedRowHeight = 80
+            tableView.rowHeight = UITableView.automaticDimension
+            tableView.register(cellType: UserCell.self)
+        }
+    }
 
     private var presenter: SearchUserPresenterInput!
     func inject(presenter: SearchUserPresenterInput) {
         self.presenter = presenter
-    }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        setup()
-    }
-
-    private func setup() {
-        tableView.estimatedRowHeight = 64
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.register(cellType: UserCell.self)
     }
 
     static func instantiate() -> SearchUserViewController {

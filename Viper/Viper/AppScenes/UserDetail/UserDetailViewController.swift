@@ -6,7 +6,13 @@
 import UIKit
 
 final class UserDetailViewController: UIViewController {
-    @IBOutlet private var tableView: UITableView!
+    @IBOutlet private var tableView: UITableView! {
+        didSet {
+            tableView.estimatedRowHeight = 64
+            tableView.rowHeight = UITableView.automaticDimension
+            tableView.register(cellType: RepositoryCell.self)
+        }
+    }
 
     private var presenter: UserDetailPresenterInput!
     func inject(presenter: UserDetailPresenterInput) {
@@ -15,16 +21,7 @@ final class UserDetailViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        setup()
-
         presenter.viewDidLoad()
-    }
-
-    private func setup() {
-        tableView.estimatedRowHeight = 64
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.register(cellType: RepositoryCell.self)
     }
 }
 
