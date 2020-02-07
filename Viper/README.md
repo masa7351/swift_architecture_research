@@ -2,6 +2,8 @@
 
 This repository was created for learning.
 
+WARNING: This implementation causes a memory leak.
+
 ## Requirements
 
 - Swift 5.1
