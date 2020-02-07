@@ -1,5 +1,14 @@
-# iOS Architecture Resarch
+# iOS Architecture Research
 
 ## VIPER
 
-- [【Swift】VIPER with Generics](https://qiita.com/shiz/items/992e15815b9a092110b6)
+- [VIPER](https://github.com/masa7351/swift_architecture_research/tree/master/Viper)
+
+## Redux
+
+- [redux-like-state-container-in-swiftui](https://github.com/masa7351/redux-like-state-container-in-swiftui)
+
+## MVVM
+
+- Not Created
+
