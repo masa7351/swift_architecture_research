@@ -2,8 +2,6 @@
 
 This repository was created for learning.
 
-WARNING: This implementation causes a memory leak.
-
 ## Requirements
 
 - Swift 5.1
@@ -12,4 +10,4 @@ WARNING: This implementation causes a memory leak.
 
 ## Reference
 
-- [VIPER with Generics](https://qiita.com/shiz/items/992e15815b9a092110b6)
+- [VIPER アーキテクチャ まとめ](https://qiita.com/hicka04/items/09534b5daffec33b2bec)
