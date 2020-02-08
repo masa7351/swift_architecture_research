@@ -73,7 +73,9 @@ extension SearchUserViewController: ScenePresenter {
 
 extension SearchUserViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        eventListener?.handle(event: .didTapSearchButton(text: searchBar.text ?? ""))
+        guard let text = searchBar.text else { return }
+        eventListener?.handle(event: .didTapSearchButton(text: text))
+        searchBar.resignFirstResponder()
     }
 }
 

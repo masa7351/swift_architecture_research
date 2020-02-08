@@ -30,13 +30,13 @@ final class SearchUserInteractor: Interactor {
             perPage: nil
         )
 
-        session.send(request) { result in
+        session.send(request) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case let .success(response):
-                    self.responseListener?.handle(response: .listReceived(result: .success(response.0.items)))
+                    self?.responseListener?.handle(response: .listReceived(result: .success(response.0.items)))
                 case let .failure(error):
-                    self.responseListener?.handle(response: .listReceived(result: .failure(error)))
+                    self?.responseListener?.handle(response: .listReceived(result: .failure(error)))
                 }
             }
         }
