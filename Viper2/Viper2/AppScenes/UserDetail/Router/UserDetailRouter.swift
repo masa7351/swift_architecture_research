@@ -20,7 +20,7 @@ final class UserDetailRouter {
         let vc = UserDetailViewController()
         let router = UserDetailRouter(viewController: vc)
         let userDetailInteractor = UserDetailInteractor()
-        let presenter = UserDetailPresenter(view: vc, router: router, userDetailInteractor: userDetailInteractor, userName: userName)
+        let presenter = UserDetailPresenter(view: vc, router: router, userDetailInteractor: DispatchMainQueueDecorator(userDetailInteractor), userName: userName)
         vc.presenter = presenter
         return vc
     }

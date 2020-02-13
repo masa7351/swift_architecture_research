@@ -30,13 +30,9 @@ extension UserDetailPresenter: UserDetailPresentation {
         userDetailInteractor.fetchList(userName: userName) { [weak self] result in
             switch result {
             case let .success(repositories):
-                DispatchQueue.main.async {
-                    self?.view?.reload(list: repositories)
-                }
+                self?.view?.reload(list: repositories)
             case let .failure(error):
-                DispatchQueue.main.async {
-                    self?.view?.showError(title: error.localizedDescription, message: nil)
-                }
+                self?.view?.showError(title: error.localizedDescription, message: nil)
             }
         }
     }

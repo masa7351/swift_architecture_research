@@ -33,17 +33,13 @@ extension SearchUserPresenter: SearchUserPresentation {
         searchUserInteractor.fetchList(query: text) { [weak self] result in
             switch result {
             case let .success(users):
-                DispatchQueue.main.async {
-                    if users.isEmpty {
-                        self?.view?.showNoContent()
-                    } else {
-                        self?.view?.reload(list: users)
-                    }
+                if users.isEmpty {
+                    self?.view?.showNoContent()
+                } else {
+                    self?.view?.reload(list: users)
                 }
             case let .failure(error):
-                DispatchQueue.main.async {
-                    self?.view?.showError(title: error.localizedDescription, message: nil)
-                }
+                self?.view?.showError(title: error.localizedDescription, message: nil)
             }
         }
     }

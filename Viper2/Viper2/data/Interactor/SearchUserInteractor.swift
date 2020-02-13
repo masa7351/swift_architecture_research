@@ -11,6 +11,16 @@ protocol SearchUserUsecase: AnyObject {
     func fetchList(query: String, completion: @escaping (Result<[User]>) -> Void)
 }
 
+extension DispatchMainQueueDecorator: SearchUserUsecase where T == SearchUserUsecase {
+    func fetchList(query: String, completion: @escaping (Result<[User]>) -> Void) {
+        decoratee.fetchList(query: query) { [weak self] result in
+            self?.dispatch {
+                completion(result)
+            }
+        }
+    }
+}
+
 final class SearchUserInteractor {
     // TODO: can change mock
 }

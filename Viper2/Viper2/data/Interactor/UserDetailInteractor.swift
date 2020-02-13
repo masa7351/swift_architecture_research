@@ -11,6 +11,16 @@ protocol UserDetailUsecase: AnyObject {
     func fetchList(userName: String, completion: @escaping (Result<[Repository]>) -> Void)
 }
 
+extension DispatchMainQueueDecorator: UserDetailUsecase where T == UserDetailUsecase {
+    func fetchList(userName: String, completion: @escaping (Result<[Repository]>) -> Void) {
+        decoratee.fetchList(userName: userName) { [weak self] result in
+            self?.dispatch {
+                completion(result)
+            }
+        }
+    }
+}
+
 final class UserDetailInteractor {}
 
 extension UserDetailInteractor: UserDetailUsecase {

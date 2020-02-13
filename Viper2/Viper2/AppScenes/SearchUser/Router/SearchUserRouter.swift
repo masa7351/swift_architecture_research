@@ -22,7 +22,7 @@ final class SearchUserRouter {
         let vc = SearchUserViewController()
         let router = SearchUserRouter(viewController: vc)
         let searchUserInteractor = SearchUserInteractor()
-        let presenter = SearchUserPresenter(view: vc, router: router, searchUserInteractor: searchUserInteractor)
+        let presenter = SearchUserPresenter(view: vc, router: router, searchUserInteractor: DispatchMainQueueDecorator(searchUserInteractor))
         vc.presenter = presenter
         return vc
     }
